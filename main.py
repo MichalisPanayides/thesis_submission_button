@@ -4,6 +4,9 @@ from tkinter import ttk
 import webbrowser
 import win32com.client as win32
 
+import pynput
+from pynput.keyboard import Key, Controller
+
 from constants import (
     RECEIVER_EMAIL,
     CC_EMAILS,
@@ -12,7 +15,11 @@ from constants import (
     ATTACHMENT_1,
     ATTACHMENT_2,
     ATTACHMENT_3,
+    BUTTON_SHRINK_FACTOR,
+    AFTER_SUBMITTING_LINK,
 )
+
+keyboard = Controller()
 
 
 def send_email():
@@ -24,18 +31,21 @@ def send_email():
     4. Attaches the thesis to the email
     5. Attaches the thesis declaration and notice of submission forms
     6. Sends the email
-    """ 
-    outlook = win32.Dispatch('outlook.application')
+    """
+    outlook = win32.Dispatch("outlook.application")
     mail = outlook.CreateItem(0)
     mail.To = RECEIVER_EMAIL
     mail.CC = CC_EMAILS
     mail.Subject = SUBJECT
     mail.Body = MESSAGE
 
-    mail.Attachments.Add(ATTACHMENT_1)
-    mail.Attachments.Add(ATTACHMENT_2)
-    mail.Attachments.Add(ATTACHMENT_3)
-
+    if ATTACHMENT_1 != "":
+        mail.Attachments.Add(ATTACHMENT_1)
+    if ATTACHMENT_2 != "":
+        mail.Attachments.Add(ATTACHMENT_2)
+    if ATTACHMENT_3 != "":
+        mail.Attachments.Add(ATTACHMENT_3)
+        
     mail.Send()
 
 
@@ -48,6 +58,7 @@ def display_button():
     4. Add a Label widget to display a message at the top
     5. Create a button widget that when clicked runs the press_button() function
     """
+
     def press_button():
         """
         This function is called when the button is clicked. The function:
@@ -55,21 +66,25 @@ def display_button():
         2. Displays a message box
         3. Opens a youtube video in a new tab
         """
-        send_email()
-        webbrowser.open('https://youtu.be/3GwjfUFyY6M?t=32')
-        messagebox.showinfo("WOOHOO","Congratulations! You did it!")
-        messagebox.showinfo("WOOHOO", "PhDone")
-
+        if RECEIVER_EMAIL != "":
+            send_email()
+        keyboard.press(Key.media_play_pause)
+        messagebox.showinfo("PhDone", "Holy shit! It's done!")
+        messagebox.showinfo("WOOOHOOOOOOO", "You did it! You submitted")
+        webbrowser.open_new_tab(AFTER_SUBMITTING_LINK)
 
     win = Tk()
-    win.attributes('-fullscreen', True)    
+    win.attributes("-fullscreen", True)
     win.geometry("1600x1050")
 
-    click_btn = PhotoImage(file='button.png').subsample(2, 2)
-    Label(win, text="Submission time!", font= ('Aerial 17 bold italic')).pack(pady=30)
+    click_btn = PhotoImage(file="button.png").subsample(
+        BUTTON_SHRINK_FACTOR, BUTTON_SHRINK_FACTOR
+    )
+    Label(win, text="Submission time!", font=("Aerial 17 bold italic")).pack(pady=30)
     button = ttk.Button(win, image=click_btn, command=press_button).pack(pady=20)
 
     win.mainloop()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     display_button()
