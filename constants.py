@@ -8,6 +8,7 @@ Replace the following constants with your own values where:
 - ATTACHMENT_2: the path of the thesis declaration form
 - ATTACHMENT_3: the path of the notice of submission form
 - BUTTON_SHRINK_FACTOR: the factor by which the button is shrunk. (currently set to 3, but depending on the size of your screen, you may need to change this value to 1, 2 or 4)
+- AFTER_SUBMITTING_LINK: the link of the image that is displayed after the button is clicked.
 
 Could be a good idea to test the script by setting the receiver email and cc emails to your own email address
 """
